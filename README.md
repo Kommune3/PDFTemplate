@@ -1,3 +1,5 @@
+![PDFTemplate](https://raw.github.com/Kommune3/PDFTemplate/master/examples/images/pdftemplate.jpg)
+
 # PDFTemplate - Create PDF's from ODT Files and replace placeholders/variables
 
 This modules offers an easy way to create PDFs from OpenDocument (.odt) templates. The magic: Each template can hold a
