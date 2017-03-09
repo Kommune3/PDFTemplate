@@ -1,0 +1,106 @@
+<?php
+
+/**
+ * PDFTemplate class
+ * PHP Version 5
+ * @link http://www.pdftemplate.eu The PDFTemplate Webpage
+ * @author Nikolai Fischer <nikolai@kommune3.org>
+ * @copyright 2017 Nikolai Fischer
+ * @license <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
+ * @note This program is distributed in the hope that it will be useful - WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.
+ */
+
+class PDFTemplate {
+  public $settings = NULL;
+  public $vars = array();
+  public $images = array();
+  public $destination = NULL;
+  public $filename = NULL;
+  public $file = NULL;
+  public $template = array();
+  public $rows = array();
+
+  public function setTemplate($template_path) {
+    $file_data = file_get_contents($template_path);
+
+    $this->template = array(
+      'extension' => 'odt',
+      'base64' => base64_encode($file_data),
+    );
+  }
+
+  public function setFilename($filename) {
+    $this->filename = $filename;
+  }
+
+  public function addVar($name, $value) {
+    $this->vars[$name] = $value;
+  }
+
+  public function addRow(PDFTemplateRow $row) {
+    $this->rows[$row->rowName][] = $row->row[$row->rowName];
+  }
+
+  public function addImage($name, $image_url) {
+    if($image = file_get_contents($image_url)) {
+      $path_info = pathinfo($image_url);
+
+      $extention = $path_info['extension'];
+      $extension = substr($extention, 0, strpos($extention, '?'));
+
+      $this->vars[$name] = array(
+        'type' => 'image',
+        'extension' => $extension,
+        'base64' => base64_encode($image)
+      );
+
+      $data = base64_decode(base64_encode($image));
+    }
+  }
+
+  public function createPDF() {
+    $this->settings['return'] = 'base64';
+
+    $data = $this->settings;
+    $data['vars'] = array_merge($this->vars, $this->rows);
+    $data['template'] = $this->template;
+
+    foreach($this->images as $key => $image) {
+      $data[$key] = array(
+        'type' => 'image',
+        'extension' => $image['extension'],
+        'base64' => $image['base64'],
+      );
+    }
+
+    $result = $this->sendRequest('job', $data);
+
+    if($result->status == 200) {
+      $pdf_decoded = base64_decode($result->base64);
+      $destination = $this->destination . $this->filename;
+      $file = fopen($destination, "wb");
+      fwrite($file, $pdf_decoded);
+      fclose($file);
+      return $file;
+    }
+  }
+
+  private function sendRequest($method, $data) {
+    $data_string = json_encode($data);
+
+    $ch = curl_init('http://pdftemplate.eu/api/v2/' . $method);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+        'Content-Type: application/json',
+        'Content-Length: ' . strlen($data_string))
+    );
+
+    $result = curl_exec($ch);
+    $result = json_decode($result);
+    return $result;
+  }
+}

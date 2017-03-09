@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PhpProjectServersManager">
+    <servers>
+      <server host="pdftemplate-lib.dev" id="e6fb8e45-d5c1-4212-990d-e0f9b832cfeb" name="pdftemplate-lib.dev" use_path_mappings="true">
+        <path_mappings>
+          <mapping local-root="$PROJECT_DIR$" remote-root="/var/www/drupalvm/PDFTemplate" />
+        </path_mappings>
+      </server>
+    </servers>
+  </component>
+</project>
