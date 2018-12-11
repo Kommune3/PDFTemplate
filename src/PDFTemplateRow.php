@@ -1,5 +1,7 @@
 <?php
 
+namespace PDFTemplate;
+
 class PDFTemplateRow {
   public $rowName = FALSE;
   public $row = array();

@@ -1,5 +1,6 @@
 <?php
 
+namespace PDFTemplate;
 /**
  * PDFTemplate class
  * PHP Version 5
