@@ -61,6 +61,23 @@ class PDFTemplate {
     }
   }
 
+  /**
+   * Add PDFTemplate var from image string.
+   *
+   * @param string $name
+   * @param string $image
+   * @param string $extension
+   */
+  public function addImageFromString($name, $image, $extension) {
+
+    $this->vars[$name] = array(
+      'type' => 'image',
+      'extension' => $extension,
+      'base64' => base64_encode($image),
+    );
+
+  }
+
   public function createPDF() {
     $this->settings['return'] = 'base64';
 
