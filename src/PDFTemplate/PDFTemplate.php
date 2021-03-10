@@ -23,27 +23,66 @@ class PDFTemplate {
   public $template = array();
   public $rows = array();
 
+  /**
+   * Set the destination of the Open Document (odt) template file.
+   *
+   * @param string $template_path
+   */
   public function setTemplate($template_path) {
     $file_data = file_get_contents($template_path);
-
     $this->template = array(
       'extension' => 'odt',
       'base64' => base64_encode($file_data),
     );
   }
 
+  /**
+   * Set the filename for the created PDF.
+   *
+   * @param string $filename
+   */
   public function setFilename($filename) {
     $this->filename = $filename;
   }
 
+  /**
+   * Set destination for the created PDF.
+   *
+   * @param string $destination
+   */
+  public function setDestination($destination) {
+    $this->destination = $destination;
+  }
+
+  /**
+   * Add a variable.
+   *
+   * @param string $name
+   *   The name of the variable to set
+   * @param string $value
+   *   The value of the variable
+   */
   public function addVar($name, $value) {
     $this->vars[$name] = $value;
   }
 
+  /**
+   * Add a row.
+   *
+   * @param PDFTemplateRow $row
+   */
   public function addRow(PDFTemplateRow $row) {
     $this->rows[$row->rowName][] = $row->row[$row->rowName];
   }
 
+  /**
+   * Add an image.
+   *
+   * @param string $name
+   *   The name of the variable
+   * @param string $iamge_url
+   *   The url of the image
+   */
   public function addImage($name, $image_url) {
     if($image = file_get_contents($image_url)) {
       $path_info = pathinfo($image_url);
@@ -78,6 +117,11 @@ class PDFTemplate {
 
   }
 
+  /**
+   * Generate the PDF.
+   *
+   * @return file
+   */
   public function createPDF() {
     $this->settings['return'] = 'base64';
 
