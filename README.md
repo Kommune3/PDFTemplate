@@ -7,11 +7,16 @@ variety of placeholders/variables that can easy be replaced.
 
 This module integrates the free www.pdftemplate.eu service. No registration required!
 
+## Install via composer
+```console
+composer require kommune3/pdftemplate
+```
+
 ## A simple example
 
 ```php
 <?php
-require 'PDFTemplateAutoload.php';
+use PDFTemplate\PDFTemplate;
 
 $pdf = new PDFTemplate();
 
