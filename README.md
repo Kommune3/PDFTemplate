@@ -17,7 +17,8 @@ $pdf = new PDFTemplate();
 
 // Basic settings
 $pdf->setFilename('example.pdf');
-$pdf->setTemplate('odt/example.odt');       // Path to your local Open Document Template
+$pdf->setTemplate('odt/example.odt'); // Path to your local Open Document Template
+$pdf->setDestination('local/folder'); // Set the destination where the generated PDF should be stored
 
 // Set some vars
 $pdf->addVar('first_name', 'John');
