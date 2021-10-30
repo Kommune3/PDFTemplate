@@ -63,7 +63,7 @@ class PDFTemplate {
    *   The value of the variable
    */
   public function addVar($name, $value) {
-    $this->vars[$name] = $value;
+    $this->vars[$name] = utf8_encode($value);
   }
 
   /**
@@ -152,7 +152,7 @@ class PDFTemplate {
   private function sendRequest($method, $data) {
     $data_string = json_encode($data);
 
-    $ch = curl_init('http://pdftemplate.eu/api/v2/' . $method);
+    $ch = curl_init('http://pdftemplate.eu/api/v3/' . $method);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
