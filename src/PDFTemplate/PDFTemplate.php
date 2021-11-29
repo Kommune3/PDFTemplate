@@ -1,6 +1,7 @@
 <?php
 
 namespace PDFTemplate;
+
 /**
  * PDFTemplate class
  * PHP Version 5
@@ -63,7 +64,7 @@ class PDFTemplate {
    *   The value of the variable
    */
   public function addVar($name, $value) {
-    $this->vars[$name] = utf8_encode($value);
+    $this->vars[$name] = $value;
   }
 
   /**
@@ -84,7 +85,7 @@ class PDFTemplate {
    *   The url of the image
    */
   public function addImage($name, $image_url) {
-    if($image = file_get_contents($image_url)) {
+    if ($image = file_get_contents($image_url)) {
       $path_info = pathinfo($image_url);
 
       $extention = $path_info['extension'];
@@ -114,7 +115,6 @@ class PDFTemplate {
       'extension' => $extension,
       'base64' => base64_encode($image),
     );
-
   }
 
   /**
@@ -129,7 +129,7 @@ class PDFTemplate {
     $data['vars'] = array_merge($this->vars, $this->rows);
     $data['template'] = $this->template;
 
-    foreach($this->images as $key => $image) {
+    foreach ($this->images as $key => $image) {
       $data[$key] = array(
         'type' => 'image',
         'extension' => $image['extension'],
@@ -139,7 +139,7 @@ class PDFTemplate {
 
     $result = $this->sendRequest('job', $data);
 
-    if($result->status == 200) {
+    if ($result->status == 200) {
       $pdf_decoded = base64_decode($result->base64);
       $destination = $this->destination . $this->filename;
       $file = fopen($destination, "wb");
@@ -152,13 +152,17 @@ class PDFTemplate {
   private function sendRequest($method, $data) {
     $data_string = json_encode($data);
 
-    $ch = curl_init('http://pdftemplate.eu/api/v3/' . $method);
+    $ch = curl_init('http://api.pdftemplate.eu/v1/pdf/create');
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    curl_setopt(
+      $ch,
+      CURLOPT_HTTPHEADER,
+      array(
         'Content-Type: application/json',
-        'Content-Length: ' . strlen($data_string))
+        'Content-Length: ' . strlen($data_string)
+      )
     );
 
     $result = curl_exec($ch);
