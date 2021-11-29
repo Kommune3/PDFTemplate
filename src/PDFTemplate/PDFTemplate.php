@@ -152,7 +152,7 @@ class PDFTemplate {
   private function sendRequest($method, $data) {
     $data_string = json_encode($data);
 
-    $ch = curl_init('http://api.pdftemplate.eu/v1/pdf/create');
+    $ch = curl_init('http://api.pdftemplate.io/v1/pdf/create');
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
