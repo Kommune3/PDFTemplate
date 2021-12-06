@@ -23,6 +23,7 @@ class PDFTemplate {
   public $file = NULL;
   public $template = array();
   public $rows = array();
+  public $key = '';
 
   /**
    * Set the destination of the Open Document (odt) template file.
@@ -53,6 +54,15 @@ class PDFTemplate {
    */
   public function setDestination($destination) {
     $this->destination = $destination;
+  }
+
+  /**
+   * Set API Key.
+   *
+   * @param string $destination
+   */
+  public function setKey($key) {
+    $this->key = $key;
   }
 
   /**
@@ -126,6 +136,7 @@ class PDFTemplate {
     $this->settings['return'] = 'base64';
 
     $data = $this->settings;
+    $data['key'] = $this->key;
     $data['vars'] = array_merge($this->vars, $this->rows);
     $data['template'] = $this->template;
 
